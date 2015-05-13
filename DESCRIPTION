@@ -1,0 +1,19 @@
+Package: GenomicVis
+Type: Package
+Title: Genomic Visualisation Routines
+Version: 1.0
+Date: 2014-06-05
+Author: Jonathan Ellis and Lutz Krause
+Maintainer: Jonathan Ellis <jonathan.j.ellis@gmail.com>
+biocViews: Genetics, Sequencing
+Description: This package contains various routines for the visualisation of
+    genomic data, particularly high-throughput whole-genome sequencing data
+    from cancer (matched normal/tumour) experiments.
+License: Artistic-2.0
+LazyLoad: yes
+VignetteBuilder: knitr
+Depends: R (>= 2.10)
+Imports: GenomicRanges, IRanges, VariantAnnotation, parallel,
+        tilingArray, RColorBrewer, grid, data.table, Vennerable
+Suggests: knitr, BiocStyle
+Packaged: 2014-07-02 07:37:19 UTC; jonathae

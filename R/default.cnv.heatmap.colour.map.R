@@ -1,0 +1,15 @@
+#' CNV heatmap colour scheme.
+#'
+#' A function that returns a colour scheme for the \code{cnv.heatmap}
+#' function.  You need to provide a \code{data.frame} to \code{cnv.heatmap},
+#' this function returns a \code{data.frame} that is suitable for the
+#' example data contained in \code{CNVData}.
+#'
+#' @author Jonathan Ellis <jonathan.j.ellis@@gmail.com>
+#' @export
+default.cnv.heatmap.colour.map <- function() {
+  data.frame(
+    type = c("Normal", "Gain", "Loss", "HD", "Amplified", "NLOH"), 
+    colour = c("black", "red", "lightblue", "darkblue", "yellow", "grey")
+  )
+}
