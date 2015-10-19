@@ -5,7 +5,7 @@
 #' a single ALT allele.  The input \code{GRanges} instance must also contain a
 #' valid \code{Seqinfo} class that gives the lengths of the chromosomes.  The
 #' easiest way to obtain this from a VCF file is via the \code{read.vcf}
-#' function from this package.  
+#' function from this package.
 #'
 #' @param x A \code{GRanges} instance containing SNVs.
 #' @param chr Create a rainfall plot for a single chromosome specified by this
@@ -18,6 +18,8 @@
 #' @param main Title for plot
 #' @param newpage logical. If TRUE create figure on a new device, otherwise
 #' print to current device.
+#' @param panel_colour Colour of background panels indicating chromosomes.
+#' @param point_size specify the size of individual points.
 #' @return None
 #' @examples
 #' library(VariantAnnotation)
@@ -29,7 +31,9 @@
 #' @import GenomicRanges
 #' @import IRanges
 #' @export
-plotKataegis <- function(x, chr = NULL, all = FALSE, alpha.f = 1.0, colour.map = kataegis.colours, main = NULL, newpage = TRUE) {
+plotKataegis <- function(x, chr=NULL, all=FALSE, alpha.f=1.0, 
+  colour.map=kataegis.colours, main=NULL, newpage=TRUE, panel_colour="grey90",
+  point_size=unit(4, "point")) {
 
   if (is.function(colour.map))
     colour.map <- colour.map()
@@ -54,9 +58,9 @@ plotKataegis <- function(x, chr = NULL, all = FALSE, alpha.f = 1.0, colour.map =
   }
 
   x$context <- sprintf("%s>%s", as.character(x$REF), as.character(unlist(x$ALT)))
-  contexts  <- c('C>T', 'C>A', 'C>G', 'T>A', 'T>G', 'T>C')
+  contexts  <- c("C>T", "C>A", "C>G", "T>A", "T>G", "T>C")
   if (all)
-    contexts <- c(contexts, c('G>T', 'G>A', 'G>C', 'A>T', 'A>G', 'A>C'))
+    contexts <- c(contexts, c("G>T", "G>A", "G>C", "A>T", "A>G", "A>C"))
 
   x$imd <- genomic.distance(x)
   x = x[! x$imd == -1]
@@ -70,61 +74,61 @@ plotKataegis <- function(x, chr = NULL, all = FALSE, alpha.f = 1.0, colour.map =
     grid.newpage()
 
   vp1 <- viewport(
-    # y = 0.55, 
-    # width = 0.9, 
-    # height = 0.8, 
-    x = unit(5, 'lines'),
-    y = unit(4, 'lines'),
-    width = unit(1, 'npc') - unit(7, 'lines'),
-    height = unit(1, 'npc') - unit(7, 'lines'),
-    just = c('left', 'bottom'),
+    # y = 0.55,
+    # width = 0.9,
+    # height = 0.8,
+    x = unit(5, "lines"),
+    y = unit(4, "lines"),
+    width = unit(1, "npc") - unit(7, "lines"),
+    height = unit(1, "npc") - unit(7, "lines"),
+    just = c("left", "bottom"),
     xscale = c(1, max(x$pos)),
     yscale = range(log10(x$imd))
   )
   pushViewport(vp1)
 
-  grid.text('Genomic Position', y = unit(-3, 'lines'))
-  grid.text('log(Genomic Distance)', x = unit(-4, 'lines'), rot = 90)
+
+  grid.text("Genomic Position", y=unit(-3, "lines"))
+  grid.text("log(Genomic Distance)", x=unit(-4, "lines"), rot=90)
   if (!is.null(main))
-    grid.text(main, y = unit(1, 'npc') + unit(1.5, 'lines'), 
-      gp = gpar(fontsize = 16))
- 
-  # Create grey rect for alternate chromosomes. 
+    grid.text(main, y=unit(1, "npc") + unit(1.5, "lines"),
+      gp=gpar(fontsize=16))
+
+  # Create grey rect for alternate chromosomes.
 
   if (is.null(chr)) {
-    ns <- cumsum(as.numeric(seqlengths(x)))
-    imd <- log10(x$imd)
-    for (i in seq(1, length(ns), 2)) {
-      n <- ns[i]
-      xi <- if (i > 1) ns[i - 1] else 0
-      width <- n - xi
-      grid.rect(
-	xi, 0, width, max(imd), 
-	just = c('left', 'bottom'), 
-	default.units = 'native', 
-	gp = gpar(col = 'white', fill = 'gray90')
-	)
+    if (!is.na(panel_colour) || !is.null(panel_colour)) {
+      ns <- cumsum(as.numeric(seqlengths(x)))
+      imd <- log10(x$imd)
+      for (i in seq(1, length(ns), 2)) {
+	n <- ns[i]
+	xi <- if (i > 1) ns[i - 1] else 0
+	width <- n - xi
+	grid.rect(
+	  xi, 0, width, max(imd),
+	  just = c("left", "bottom"),
+	  default.units="native",
+	  gp = gpar(col=panel_colour, fill=panel_colour))
+      }
     }
   }
+
+  ns <- sum(as.numeric(seqlengths(x)))
+  grid.rect(0, 0, ns, max(log10(x$imd)), just=c("left", "bottom"), 
+    default.units="native", gp=gpar(fill=NA))
+  grid.xaxis()
+  grid.yaxis()
 
   for (context in contexts) {
     y <- x[x$context == context]
     grid.points(
-      y$pos, 
-      log10(y$imd), 
-      pch = 19, 
-      size = unit(4, 'point'), 
-      gp = gpar(col = adjustcolor(colour.map[context], alpha.f = alpha.f))
+      y$pos,
+      log10(y$imd),
+      pch=19,
+      size=point_size,
+      gp=gpar(col=adjustcolor(colour.map[context], alpha.f=alpha.f))
     )
   }
 
-  grid.rect()
-  grid.xaxis()
-  grid.yaxis()
-
-  # legd <- legendGrob(contexts, pch = 19, gp = gpar(col = colour.map[contexts]))
-  # # gg <- packGrob(packGrob(frameGrob(), gt), legd, side = 'right')
-  # gg <- packGrob(frameGrob(), gt)
-  # grid.draw(gt)
   upViewport()
 }
