@@ -1,8 +1,8 @@
 find.kataegis.pcf.helper <- function(chr, x, min.snvs, max.mean.distance, 
   maxseg, maxk) 
 {
-  seq.levels <- GenomicRanges::seqlevels(x)
-  x <- x[seqnames(x) == chr]
+  seq.levels <- GenomeInfoDb::seqlevels(x)
+  x <- x[GenomeInfoDb::seqnames(x) == chr]
   n <- length(x)
   if (n >= min.snvs) {
     r <- data.frame(i = rep(NA, n), j = rep(NA, n))
@@ -24,10 +24,10 @@ find.kataegis.pcf.helper <- function(chr, x, min.snvs, max.mean.distance,
 
     r <- r[!is.na(r$i), ]
     g <- GenomicRanges::GRanges(
-      seqnames = IRanges::Rle(chr, nrow(r)), 
+      seqnames = S4Vectors::Rle(chr, nrow(r)), 
       ranges = IRanges::IRanges(start = r$i, end = r$j)
     )
-    GenomicRanges::seqlevels(g) <- seq.levels
+    GenomeInfoDb::seqlevels(g) <- seq.levels
     reduceWithin(g)
   } else {
     # If there are less than min.snvs variants there can't be any kataegis

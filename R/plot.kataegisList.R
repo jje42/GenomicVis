@@ -33,6 +33,7 @@
 #' }
 #' @keywords methods
 #' @import GenomicRanges
+#' @import GenomeInfoDb
 plot.kataegisList <- function(x, 
 			      chr = NA,
 			      start = NA,

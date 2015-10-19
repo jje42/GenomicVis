@@ -1,4 +1,5 @@
 #' @import GenomicRanges
+#' @import GenomeInfoDb
 genomic.distance <- function(snv) {
   # calculate the genetic distance of SNVs
   pos <- c(0, start(snv))

@@ -13,7 +13,7 @@ License: Artistic-2.0
 LazyLoad: yes
 VignetteBuilder: knitr
 Depends: R (>= 3.2)
-Imports: GenomicRanges, IRanges, VariantAnnotation, parallel,
+Imports: GenomicRanges, IRanges, GenomeInfoDb, VariantAnnotation, parallel,
         tilingArray, RColorBrewer, grid, data.table, Vennerable
 Suggests: knitr, BiocStyle
 Packaged: 2014-07-02 07:37:19 UTC; jonathae
