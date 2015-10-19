@@ -1,6 +1,6 @@
 find.kataegis.helper <- function(chr, x) {
-  seq.levels <- GenomicRanges::seqlevels(x)
-  x <- x[GenomicRanges::seqnames(x) == chr]
+  seq.levels <- GenomeInfoDb::seqlevels(x)
+  x <- x[GenomeInfoDb::seqnames(x) == chr]
   imd <- x$imd
   n <- length(imd)
   r <- data.frame(i = rep(NA, n), j = rep(NA, n))
@@ -17,10 +17,10 @@ find.kataegis.helper <- function(chr, x) {
   }
   r <- r[!is.na(r$i), ]
   g <- GenomicRanges::GRanges(
-    seqnames = IRanges::Rle(chr, nrow(r)), 
+    seqnames = S4Vectors::Rle(chr, nrow(r)),
     ranges = IRanges::IRanges(start = r$i, end = r$j)
   )
-  GenomicRanges::seqlevels(g) <- seq.levels
+  GenomeInfoDb::seqlevels(g) <- seq.levels
   reduceWithin(g)
 }
 
