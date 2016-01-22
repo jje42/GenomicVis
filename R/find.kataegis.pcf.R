@@ -1,6 +1,7 @@
 #' @import parallel
 #' @import IRanges
 #' @import GenomicRanges
+#' @import GenomeInfoDb
 find.kataegis.pcf <- function(x, min.snvs, max.mean.distance, maxseg = NA, 
     maxk = NA, ncpus = getOption('cl.cores', 1)) {
   # x = GRanges

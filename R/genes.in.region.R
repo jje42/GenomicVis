@@ -11,6 +11,7 @@
 #' @author Lutz Krause <lutz.krause@@qimrberghofer.edu.au>
 #' @import GenomicRanges
 #' @import IRanges
+#' @import S4Vectors
 
 genes.in.region <- function(chr, begin, end, genes.gr) {
   if (is.numeric(chr))
