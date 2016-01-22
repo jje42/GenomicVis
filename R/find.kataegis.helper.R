@@ -1,4 +1,5 @@
-find.kataegis.helper <- function(chr, x) {
+
+find.kataegis.helper <- function(chr, x, min.snvs=6, max.mean.distance=1000) {
   seq.levels <- GenomeInfoDb::seqlevels(x)
   x <- x[GenomeInfoDb::seqnames(x) == chr]
   imd <- x$imd
@@ -8,7 +9,7 @@ find.kataegis.helper <- function(chr, x) {
   for (i in 1:length(imd)) {
     for (j in length(imd):i) {
       xs <- imd[i:j]
-      if (length(xs) >= 6 & mean(xs) <= 1000) {
+      if (length(xs) >= min.snvs & mean(xs) <= max.mean.distance) {
 	r[idx, ] <- c(start(x[i]), end(x[j]))
 	idx <- idx + 1
 	break
